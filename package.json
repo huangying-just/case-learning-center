@@ -1,0 +1,39 @@
+{
+  "name": "case-learning-center",
+  "version": "1.0.0",
+  "description": "案例学习中心 - 教学案例内容管理系统",
+  "private": true,
+  "scripts": {
+    "install": "npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "setup": "npm run install && npm run setup:backend",
+    "setup:backend": "cd backend && npm run setup",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm start",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "keywords": [
+    "education",
+    "case-study",
+    "learning",
+    "cms",
+    "react",
+    "nodejs",
+    "express",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/huangying-just/case-learning-center.git"
+  }
+} 
