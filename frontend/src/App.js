@@ -11,6 +11,8 @@ import CaseDetailPage from './pages/CaseDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CaseFormPage from './pages/CaseFormPage';
+import ConfigManagePage from './pages/ConfigManagePage';
+import UserManagePage from './pages/UserManagePage';
 import PrivateRoute from './components/PrivateRoute';
 
 const { Header, Content, Footer } = Layout;
@@ -59,6 +61,16 @@ function App() {
           <Route path="/edit-case/:id" element={
             <PrivateRoute roles={['teacher', 'admin']}>
               <CaseFormPage isEdit />
+            </PrivateRoute>
+          } />
+          <Route path="/config" element={
+            <PrivateRoute roles={['admin']}>
+              <ConfigManagePage />
+            </PrivateRoute>
+          } />
+          <Route path="/users" element={
+            <PrivateRoute roles={['admin']}>
+              <UserManagePage />
             </PrivateRoute>
           } />
           

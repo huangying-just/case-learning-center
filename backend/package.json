@@ -1,6 +1,6 @@
 {
   "name": "case-learning-center-backend",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Case Learning Center 后端API服务",
   "main": "app.js",
   "scripts": {
@@ -10,19 +10,25 @@
     "seed": "node scripts/seedData.js",
     "setup": "npm run init-db && npm run seed"
   },
-  "keywords": ["case", "learning", "education", "cms"],
+  "keywords": [
+    "case",
+    "learning",
+    "education",
+    "cms"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6",
-    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
-    "multer": "^1.4.5-lts.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
-} 
+}

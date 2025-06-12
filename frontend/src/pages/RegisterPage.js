@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Form, Input, Button, Typography, Select, message, Divider } from 'antd';
 import { UserOutlined, LockOutlined, TeamOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const { Title, Text } = Typography;
@@ -11,13 +11,15 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 如果已经登录，重定向到主页
+  // 如果已经登录，重定向到主页或目标页面
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -26,7 +28,8 @@ const RegisterPage = () => {
 
     if (result.success) {
       message.success('注册成功！欢迎加入案例学习中心！');
-      navigate('/', { replace: true });
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     } else {
       message.error(result.error);
     }

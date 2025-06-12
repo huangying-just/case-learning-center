@@ -8,6 +8,8 @@ const config = require('./config');
 // 导入路由
 const authRoutes = require('./routes/auth');
 const casesRoutes = require('./routes/cases');
+const configRoutes = require('./routes/config');
+const usersRoutes = require('./routes/users');
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.use('/attachments', (req, res, next) => {
 // API 路由
 app.use('/api/auth', authRoutes);
 app.use('/api/cases', casesRoutes);
+app.use('/api/config', configRoutes);
+app.use('/api/users', usersRoutes);
 
 // 根路径欢迎页面
 app.get('/', (req, res) => {
@@ -57,6 +61,18 @@ app.get('/', (req, res) => {
         create: 'POST /api/cases',
         update: 'PUT /api/cases/:id',
         delete: 'DELETE /api/cases/:id'
+      },
+      users: {
+        list: 'GET /api/users',
+        detail: 'GET /api/users/:id',
+        create: 'POST /api/users',
+        update: 'PUT /api/users/:id',
+        delete: 'DELETE /api/users/:id',
+        stats: 'GET /api/users/stats/overview'
+      },
+      config: {
+        list: 'GET /api/config',
+        manage: 'POST /api/config'
       },
       attachments: 'GET /attachments/:filename'
     },
@@ -89,7 +105,7 @@ app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
-        error: '文件大小超过限制（最大10MB）'
+        error: '文件大小超过限制（最大20MB）'
       });
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "case-learning-center-frontend",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Case Learning Center 前端应用",
   "private": true,
   "dependencies": {
@@ -32,5 +32,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:9999"
 } 

@@ -1,8 +1,8 @@
-# Case Learning Center v1.0.0
+# Case Learning Center v1.2.0
 
 <div align="center">
 
-![Logo](https://img.shields.io/badge/Case%20Learning%20Center-v1.0.0-blue?style=for-the-badge)
+![Logo](https://img.shields.io/badge/Case%20Learning%20Center-v1.2.0-blue?style=for-the-badge)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18+-blue?style=flat-square&logo=react)](https://reactjs.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-3+-orange?style=flat-square&logo=sqlite)](https://sqlite.org/)
@@ -31,7 +31,9 @@ Case Learning Center 是一个基于现代Web技术栈构建的教学案例内�
 ### 📚 案例管理
 - **案例CRUD**: 完整的案例增删改查功能
 - **富文本编辑**: 支持格式化的案例内容编辑
-- **文件附件**: 支持PDF、Word、PPT等多种格式文件上传
+- **多文件附件**: 支持最多10个附件上传，包含PDF、Word、PPT、图片、Markdown等格式
+- **图片预览**: 支持JPG、PNG、GIF等图片格式在线预览
+- **智能标签**: 知识点、教学知识点、标签支持快速添加和重复检测
 - **案例搜索**: 强大的搜索和筛选功能
 
 ### 🎨 用户界面
@@ -107,7 +109,8 @@ case-learning-center/
 │   │   └── 📄 db.js                # 数据库连接和操作
 │   └── 📁 scripts/                 # 脚本文件
 │       ├── 📄 initDatabase.js      # 数据库初始化
-│       └── 📄 seedData.js          # 演示数据填充
+│       ├── 📄 seedData.js          # 演示数据填充
+│       └── 📄 updateMultipleAttachments.js # 多附件功能迁移脚本
 ├── 📁 frontend/                    # 前端源码
 │   ├── 📄 package.json             # 前端依赖管理
 │   ├── 📁 public/                  # 静态资源
@@ -212,9 +215,9 @@ npm test            # 运行测试
 | 服务 | 地址 | 说明 |
 |------|------|------|
 | 🎨 前端应用 | http://localhost:3000 | React开发服务器 |
-| 🔧 后端API | http://localhost:3001 | Express API服务器 |
-| 📖 API文档 | http://localhost:3001 | 根路径显示所有可用端点 |
-| 💓 健康检查 | http://localhost:3001/api/health | 服务器状态检查 |
+| 🔧 后端API | http://localhost:9999 | Express API服务器 |
+| 📖 API文档 | http://localhost:9999 | 根路径显示所有可用端点 |
+| 💓 健康检查 | http://localhost:9999/api/health | 服务器状态检查 |
 
 ## 👥 演示账户
 
@@ -238,7 +241,7 @@ npm test            # 运行测试
 | 方法 | 端点 | 描述 | 认证 | 权限 |
 |------|------|------|------|------|
 | GET | `/api/cases` | 获取案例列表 | ❌ | 公开 |
-| GET | `/api/cases/:id` | 获取单个案例详情 | ❌ | 公开 |
+| GET | `/api/cases/:id` | 获取单个案例详情 | ✅ | 登录用户 |
 | POST | `/api/cases` | 创建新案例 | ✅ | 教师、管理员 |
 | PUT | `/api/cases/:id` | 更新案例 | ✅ | 作者、管理员 |
 | DELETE | `/api/cases/:id` | 删除案例 | ✅ | 作者、管理员 |
@@ -246,29 +249,46 @@ npm test            # 运行测试
 ### 文件接口
 | 方法 | 端点 | 描述 | 认证 |
 |------|------|------|------|
-| GET | `/attachments/:filename` | 下载文件附件 | ❌ |
+| GET | `/attachments/:filename` | 下载文件附件 | ✅ |
+| POST | `/api/cases/:id/attachments` | 为案例添加附件 | ✅ |
+| DELETE | `/api/cases/:id/attachments/:attachmentId` | 删除案例附件 | ✅ |
 
 ### API请求示例
 
 #### 用户登录
 ```bash
-curl -X POST http://localhost:3001/api/auth/login \
+curl -X POST http://localhost:9999/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username": "teacher", "password": "password"}'
 ```
 
 #### 获取案例列表
 ```bash
-curl http://localhost:3001/api/cases
+curl http://localhost:9999/api/cases
 ```
 
 #### 创建案例（需要认证）
 ```bash
-curl -X POST http://localhost:3001/api/cases \
+curl -X POST http://localhost:9999/api/cases \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -F "title=新案例标题" \
   -F "content=案例内容详情" \
-  -F "attachment=@file.pdf"
+  -F "attachments=@file1.pdf" \
+  -F "attachments=@file2.jpg" \
+  -F "attachments=@file3.md"
+```
+
+#### 为案例添加附件
+```bash
+curl -X POST http://localhost:9999/api/cases/1/attachments \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -F "attachments=@new_file.docx"
+```
+
+#### 删除案例附件
+```bash
+curl -X DELETE http://localhost:9999/api/cases/1/attachments/2 \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
 ## 🚀 部署指南
@@ -289,7 +309,7 @@ curl -X POST http://localhost:3001/api/cases \
 #### 环境变量配置
 ```bash
 # 后端环境变量 (.env)
-PORT=3001
+PORT=9999
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 DB_PATH=./database/case.db
 UPLOAD_PATH=./uploads
@@ -334,6 +354,37 @@ UPLOAD_PATH=./uploads
 - **Email**: 发送邮件获取技术支持
 
 ## 📈 版本历史
+
+### v1.2.0 (2024-06-12)
+- 🌍 **访客浏览模式**: 未登录用户可以浏览案例列表页面
+- 🔐 **智能登录引导**: 
+  - 点击"查看详情"时智能检测登录状态
+  - 未登录用户显示确认对话框，可选择登录或注册
+  - 案例详情页显示友好的登录提示卡片
+- 🎯 **登录后跳转**: 登录/注册成功后自动跳转到原本要访问的案例详情页
+- 🎨 **UI优化**: 
+  - 移除案例卡片中的下载附件按钮，简化界面
+  - 优化登录提示页面的用户体验
+- ⚙️ **配置更新**: 
+  - 后端服务器端口更改为9999，避免端口冲突
+  - 更新前端代理配置和API端点
+- 🔒 **权限细化**: 
+  - 案例详情查看需要登录认证
+  - 附件下载需要登录认证
+  - 保持案例列表的公开访问权限
+
+### v1.1.0 (2024-06-12)
+- 🚀 **多附件功能**: 支持每个案例上传最多10个附件文件
+- 🖼️ **图片预览**: 支持JPG、PNG、GIF、SVG等图片格式在线预览
+- 🔧 **修复下载链接**: 解决附件下载链接错误和端口配置问题
+- 🏷️ **智能标签管理**: 
+  - 修复回车键意外触发表单提交的问题
+  - 新增重复标签检测和警告提示
+  - 支持点击图标添加标签功能
+  - 优化标签输入用户体验
+- 🗃️ **数据库优化**: 新增`case_attachments`表，完全向后兼容老数据
+- 🔒 **安全增强**: 文件类型白名单验证，20MB大小限制
+- 🎨 **UI优化**: 附件显示区域重新设计，支持文件大小和类型显示
 
 ### v1.0.0 (2024-06-11)
 - 🎉 初始版本发布

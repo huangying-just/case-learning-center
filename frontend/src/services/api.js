@@ -46,7 +46,19 @@ export const authAPI = {
 // 案例API
 export const casesAPI = {
   // 获取所有案例
-  getAllCases: () => api.get('/cases'),
+  getAllCases: (filters = {}) => {
+    const params = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) {
+        params.append(key, filters[key]);
+      }
+    });
+    const queryString = params.toString();
+    return api.get(`/cases${queryString ? `?${queryString}` : ''}`);
+  },
+  
+  // 获取筛选选项
+  getFilterOptions: () => api.get('/cases/filter-options'),
   
   // 获取单个案例
   getCaseById: (id) => api.get(`/cases/${id}`),
@@ -67,6 +79,16 @@ export const casesAPI = {
   
   // 删除案例
   deleteCase: (id) => api.delete(`/cases/${id}`),
+  
+  // 添加附件到案例
+  addAttachments: (caseId, formData) => api.post(`/cases/${caseId}/attachments`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
+  
+  // 删除案例附件
+  deleteAttachment: (caseId, attachmentId) => api.delete(`/cases/${caseId}/attachments/${attachmentId}`),
 };
 
 // 附件API
@@ -74,8 +96,72 @@ export const attachmentAPI = {
   // 获取附件下载URL
   getDownloadUrl: (filename, originalName) => {
     const params = originalName ? `?name=${encodeURIComponent(originalName)}` : '';
-    return `/attachments/${filename}${params}`;
+    // 在开发环境下使用后端端口，生产环境使用相对路径
+    const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:9999' : '';
+    return `${baseUrl}/attachments/${filename}${params}`;
   },
+  
+  // 直接下载附件的方法
+  downloadAttachment: (filename, originalName) => {
+    const url = attachmentAPI.getDownloadUrl(filename, originalName);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = originalName || filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  },
+};
+
+// 配置API
+export const configAPI = {
+  // 获取所有配置选项
+  getAllConfigs: () => api.get('/config'),
+  
+  // 获取指定类型的配置选项
+  getConfigByType: (type) => api.get(`/config/${type}`),
+  
+  // 管理员获取所有配置
+  getAdminConfigs: () => api.get('/config/admin/all'),
+  
+  // 添加配置选项
+  createConfig: (configData) => api.post('/config', configData),
+  
+  // 更新配置选项
+  updateConfig: (id, configData) => api.put(`/config/${id}`, configData),
+  
+  // 删除配置选项
+  deleteConfig: (id) => api.delete(`/config/${id}`),
+};
+
+// 用户管理API (仅管理员)
+export const usersAPI = {
+  // 获取用户列表
+  getAllUsers: (params = {}) => {
+    const queryParams = new URLSearchParams();
+    Object.keys(params).forEach(key => {
+      if (params[key]) {
+        queryParams.append(key, params[key]);
+      }
+    });
+    const queryString = queryParams.toString();
+    return api.get(`/users${queryString ? `?${queryString}` : ''}`);
+  },
+  
+  // 获取用户详情
+  getUserById: (id) => api.get(`/users/${id}`),
+  
+  // 创建用户
+  createUser: (userData) => api.post('/users', userData),
+  
+  // 更新用户
+  updateUser: (id, userData) => api.put(`/users/${id}`, userData),
+  
+  // 删除用户
+  deleteUser: (id) => api.delete(`/users/${id}`),
+  
+  // 获取用户统计
+  getUserStats: () => api.get('/users/stats/overview'),
 };
 
 export default api; 

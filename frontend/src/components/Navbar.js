@@ -6,7 +6,9 @@ import {
   PlusOutlined, 
   UserOutlined, 
   LoginOutlined,
-  LogoutOutlined 
+  LogoutOutlined,
+  SettingOutlined,
+  TeamOutlined
 } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -62,6 +64,20 @@ const Navbar = () => {
       key: '/create-case',
       icon: <PlusOutlined />,
       label: <Link to="/create-case">创建案例</Link>,
+    });
+  }
+
+  // 如果用户是管理员，添加管理功能菜单
+  if (hasRole(['admin'])) {
+    menuItems.push({
+      key: '/users',
+      icon: <TeamOutlined />,
+      label: <Link to="/users">用户管理</Link>,
+    });
+    menuItems.push({
+      key: '/config',
+      icon: <SettingOutlined />,
+      label: <Link to="/config">配置管理</Link>,
     });
   }
 
