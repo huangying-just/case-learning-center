@@ -99,6 +99,43 @@ cd backend && npm start
 
 ### 🔍 故障排除
 
+#### "Cannot find module '../database/db'" 错误
+如果在运行 `npm run setup` 或初始化脚本时遇到此错误：
+
+```bash
+Error: Cannot find module '../database/db'
+Require stack:
+- /app/backend/scripts/seedData.js
+```
+
+**原因分析**：
+- 在容器化环境中，`database/db.js` 模块可能没有被正确部署
+- 或者存在模块路径解析问题
+
+**解决方案**：
+1. **确保所有文件都已上传**：
+   ```bash
+   # 检查关键文件是否存在
+   ls -la backend/database/db.js
+   ls -la backend/scripts/seedData.js
+   ls -la backend/config.js
+   ```
+
+2. **重新克隆最新版本**（推荐）：
+   ```bash
+   git clone https://github.com/huangying-just/case-learning-center.git
+   cd case-learning-center
+   npm run setup
+   ```
+
+3. **手动安装依赖**：
+   ```bash
+   cd backend
+   npm install
+   npm run init-db
+   npm run seed
+   ```
+
 #### 数据库文件不存在
 ```bash
 # 检查数据库文件是否存在
