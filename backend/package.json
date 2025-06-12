@@ -1,6 +1,6 @@
 {
   "name": "case-learning-center-backend",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Case Learning Center 后端API服务",
   "main": "app.js",
   "scripts": {

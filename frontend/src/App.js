@@ -80,7 +80,7 @@ function App() {
       </Content>
       
       <Footer style={{ textAlign: 'center', backgroundColor: '#f0f2f5' }}>
-        案例学习中心 ©{new Date().getFullYear()} Created with ❤️
+        案例学习中心 ©{new Date().getFullYear()} 中物联教育培训中心
       </Footer>
     </Layout>
   );

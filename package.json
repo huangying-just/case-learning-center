@@ -1,16 +1,17 @@
 {
   "name": "case-learning-center",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "案例学习中心 - 基于角色的案例管理系统",
   "main": "index.js",
   "scripts": {
+    "setup": "npm run install:all && npm run init:db",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "build": "cd frontend && npm run build",
     "start": "cd backend && npm start",
-    "init:db": "cd backend && node scripts/initDb.js",
+    "init:db": "cd backend && node scripts/initDatabase.js && node scripts/seedData.js",
     "update:db": "cd backend && node scripts/updateDatabase.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -34,6 +35,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/case-learning-center.git"
+    "url": "https://github.com/huangying-just/case-learning-center.git"
   }
 }
